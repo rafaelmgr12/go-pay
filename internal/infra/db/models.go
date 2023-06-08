@@ -5,13 +5,12 @@
 package db
 
 import (
-	"database/sql"
 	"time"
 )
 
 type Balance struct {
 	ID        string
 	UserID    string
-	Amount    sql.NullString
 	CreatedAt time.Time
+	Amount    float64
 }

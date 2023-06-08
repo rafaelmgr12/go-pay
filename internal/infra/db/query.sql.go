@@ -7,16 +7,15 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const getBalanceByAccountID = `-- name: GetBalanceByAccountID :one
-select amount from balances where id = $1
+select amount from balances where id = ?
 `
 
-func (q *Queries) GetBalanceByAccountID(ctx context.Context) (sql.NullString, error) {
-	row := q.db.QueryRowContext(ctx, getBalanceByAccountID)
-	var amount sql.NullString
+func (q *Queries) GetBalanceByAccountID(ctx context.Context, id string) (float64, error) {
+	row := q.db.QueryRowContext(ctx, getBalanceByAccountID, id)
+	var amount float64
 	err := row.Scan(&amount)
 	return amount, err
 }

@@ -4,13 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"net/http"
 
-	"github.com/go-chi/chi/middleware"
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/rafaelmgr12/go-pay/configs"
+	"github.com/rafaelmgr12/go-pay/internal/infra/web"
 )
 
 func main() {
@@ -26,11 +24,8 @@ func main() {
 	}
 	defer conn.Close()
 
-	log.Println("Starting web server")
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
-	})
-	http.ListenAndServe(":"+configs.WebServerPort, r)
+	log.Println("Starting application...")
+	log.Println("Listening on port " + configs.WebServerPort)
+
+	web.HandleRequests(configs.WebServerPort, conn)
 }
