@@ -36,6 +36,7 @@ func main() {
 	webserverBalanceHandler := handlers.NewWebBalanceHandler(*usecase)
 
 	webserver.AddHandler("/api/v1/balance/{_id}", webserverBalanceHandler.GetBalanceHandle)
+	webserver.AddHandler("/api/v1/transfer", webserverBalanceHandler.TransferHandle)
 
 	log.Println("Server running on port " + configs.WebServerPort)
 
