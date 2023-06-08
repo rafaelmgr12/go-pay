@@ -28,3 +28,42 @@ func (r *ChatRepositoryMySQL) GetAmountById(ctx context.Context, id string) (flo
 	return res, nil
 
 }
+
+func (r *ChatRepositoryMySQL) Transfer(debtorId string, creditorId string, amount float64, ctx context.Context) error {
+	tx, err := r.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return errors.New("error starting transaction")
+	}
+	defer tx.Rollback()
+
+	debtorIdAmount, err := r.Queries.GetBalanceByAccountID(ctx, debtorId)
+	if err != nil {
+		return errors.New("error getting debtor balance")
+	}
+	creditorIdAmount, err := r.Queries.GetBalanceByAccountID(ctx, creditorId)
+	if err != nil {
+		return errors.New("error getting creditor balance")
+	}
+
+	paramsDebtorID := db.UpdateBalanceParams{
+		Amount: debtorIdAmount - amount,
+		UserID: debtorId,
+	}
+
+	paramsCreditorID := db.UpdateBalanceParams{
+		Amount: creditorIdAmount + amount,
+		UserID: creditorId,
+	}
+
+	err = r.Queries.UpdateBalance(ctx, paramsDebtorID)
+	if err != nil {
+		return errors.New("error updating debtor balance")
+	}
+
+	err = r.Queries.UpdateBalance(ctx, paramsCreditorID)
+	if err != nil {
+		return errors.New("error updating creditor balance")
+	}
+
+	return tx.Commit()
+}
