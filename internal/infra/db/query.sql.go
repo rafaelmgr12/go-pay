@@ -19,3 +19,17 @@ func (q *Queries) GetBalanceByAccountID(ctx context.Context, userID string) (flo
 	err := row.Scan(&amount)
 	return amount, err
 }
+
+const updateBalance = `-- name: UpdateBalance :exec
+UPDATE balances SET amount = ? WHERE user_id = ?
+`
+
+type UpdateBalanceParams struct {
+	Amount float64
+	UserID string
+}
+
+func (q *Queries) UpdateBalance(ctx context.Context, arg UpdateBalanceParams) error {
+	_, err := q.db.ExecContext(ctx, updateBalance, arg.Amount, arg.UserID)
+	return err
+}
