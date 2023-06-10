@@ -8,19 +8,19 @@ import (
 	"github.com/rafaelmgr12/go-pay/internal/infra/db"
 )
 
-type ChatRepositoryMySQL struct {
+type BalanceRepositoryMySQL struct {
 	DB      *sql.DB
 	Queries *db.Queries
 }
 
-func NewChatRepositoryMySQL(dbt *sql.DB) *ChatRepositoryMySQL {
-	return &ChatRepositoryMySQL{
+func NewBalanceRepositoryMySQL(dbt *sql.DB) *BalanceRepositoryMySQL {
+	return &BalanceRepositoryMySQL{
 		DB:      dbt,
 		Queries: db.New(dbt),
 	}
 }
 
-func (r *ChatRepositoryMySQL) GetAmountById(ctx context.Context, id string) (float64, error) {
+func (r *BalanceRepositoryMySQL) GetAmountById(ctx context.Context, id string) (float64, error) {
 	res, err := r.Queries.GetBalanceByAccountID(ctx, id)
 	if err != nil {
 		return -1, errors.New("error getting balance")
@@ -29,7 +29,7 @@ func (r *ChatRepositoryMySQL) GetAmountById(ctx context.Context, id string) (flo
 
 }
 
-func (r *ChatRepositoryMySQL) Transfer(debtorId string, creditorId string, amount float64, ctx context.Context) error {
+func (r *BalanceRepositoryMySQL) Transfer(debtorId string, creditorId string, amount float64, ctx context.Context) error {
 	tx, err := r.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return errors.New("error starting transaction")
