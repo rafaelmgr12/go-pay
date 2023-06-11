@@ -29,7 +29,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	repo := repository.NewChatRepositoryMySQL(conn)
+	repo := repository.NewBalanceRepositoryMySQL(conn)
 	usecase := transactions.NewTransactionsUseCase(repo)
 
 	webserver := webserver.NewWebServer(":" + configs.WebServerPort)
