@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img alt="Logo" src="./doc/img/1528452424478.png">
+  <img alt="Logo" src="./doc/img/logo.png">
 </h1>
 
 <h1 align="center">Go Pay</h1>
